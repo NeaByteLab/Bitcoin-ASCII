@@ -97,4 +97,70 @@ export class PriceApiService {
       throw new Error(`Failed to fetch candlestick data from Binance: ${error}`)
     }
   }
+
+  /**
+   * Fetch historical data for a specific date (24 hours of 30m intervals)
+   * @param date - Date to fetch data for (default: today)
+   * @returns Promise with candlestick data for the specified date
+   */
+  async getHistoricalData(date: Date = new Date()): Promise<Candlestick[]> {
+    try {
+      const startTime = new Date(date)
+      startTime.setHours(0, 0, 0, 0)
+      const endTime = new Date(date)
+      endTime.setHours(23, 59, 59, 999)
+
+      const response = await axios.get(`${this.baseUrl}/klines`, {
+        params: {
+          symbol: 'BTCUSDT',
+          interval: '30m',
+          startTime: startTime.getTime(),
+          endTime: endTime.getTime(),
+          limit: 48 // 24 hours * 2 (30m intervals)
+        }
+      })
+
+      return response.data.map((kline: (string | number)[]) => ({
+        open: parseFloat(kline[1] as string),
+        high: parseFloat(kline[2] as string),
+        low: parseFloat(kline[3] as string),
+        close: parseFloat(kline[4] as string),
+        timestamp: kline[0] as number,
+        volume: parseFloat(kline[5] as string)
+      }))
+    } catch (error) {
+      throw new Error(`Failed to fetch historical data from Binance: ${error}`)
+    }
+  }
+
+  /**
+   * Fetch historical data for a specific date range
+   * @param startDate - Start date
+   * @param endDate - End date
+   * @returns Promise with candlestick data for the date range
+   */
+  async getHistoricalDataRange(startDate: Date, endDate: Date): Promise<Candlestick[]> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/klines`, {
+        params: {
+          symbol: 'BTCUSDT',
+          interval: '30m',
+          startTime: startDate.getTime(),
+          endTime: endDate.getTime(),
+          limit: 1500
+        }
+      })
+
+      return response.data.map((kline: (string | number)[]) => ({
+        open: parseFloat(kline[1] as string),
+        high: parseFloat(kline[2] as string),
+        low: parseFloat(kline[3] as string),
+        close: parseFloat(kline[4] as string),
+        timestamp: kline[0] as number,
+        volume: parseFloat(kline[5] as string)
+      }))
+    } catch (error) {
+      throw new Error(`Failed to fetch historical data range from Binance: ${error}`)
+    }
+  }
 }
