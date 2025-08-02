@@ -1,7 +1,7 @@
-import { PriceApiService } from '../services/price-api.js'
-import { ChartRenderer } from './chart-renderer.js'
-import { DataProcessor } from './data-processor.js'
-import { TemplateRenderer } from './template-renderer.js'
+import { PriceApiService } from '@/services/price-api.js'
+import { ChartRenderer } from '@/utils/chart-renderer.js'
+import { DataProcessor } from '@/utils/data-processor.js'
+import { TemplateRenderer } from '@/utils/template-renderer.js'
 
 /**
  * README generator with live Bitcoin data

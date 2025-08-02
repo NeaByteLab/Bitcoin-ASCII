@@ -1,4 +1,4 @@
-import type { PriceData } from '../types/price.js'
+import type { PriceData } from '@/types/price.js'
 
 /**
  * Data processor for formatting Bitcoin price data

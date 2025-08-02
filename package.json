@@ -23,9 +23,9 @@
     "format:check": "prettier --check src/**/*.ts",
     "readme": "npm run dev",
     "archive": "tsx src/index.ts archive",
-    "archive:today": "tsx src/index.ts archive",
     "archive:date": "tsx src/index.ts archive",
-    "archive:range": "tsx src/index.ts archive-range"
+    "archive:range": "tsx src/index.ts archive-range",
+    "archive:historic": "tsx src/index.ts archive-historic"
   },
   "dependencies": {
     "axios": "^1.11.0"

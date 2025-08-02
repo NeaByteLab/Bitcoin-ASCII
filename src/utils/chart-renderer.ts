@@ -1,4 +1,5 @@
-import type { Candlestick } from '../types/price.js'
+import type { Candlestick } from '@/types/price.js'
+import { ChartRenderingError, DataProcessingError } from '@/types/errors.js'
 
 /**
  * Chart renderer for generating ASCII charts
@@ -9,18 +10,36 @@ export class ChartRenderer {
    * @param candlesticks - Array of candlestick data
    * @param dataPoints - Number of data points to show (default: 60)
    * @returns Clean ASCII chart
+   * @throws ChartRenderingError if chart generation fails
    */
   generateCleanChart(candlesticks: Candlestick[], dataPoints: number = 60): string {
-    if (candlesticks.length === 0) {
-      return 'No data available'
+    try {
+      if (!Array.isArray(candlesticks)) {
+        throw new DataProcessingError('Invalid candlesticks data', 'candlesticks')
+      }
+      if (candlesticks.length === 0) {
+        return 'No data available'
+      }
+      if (dataPoints <= 0) {
+        throw new ChartRenderingError('Invalid dataPoints parameter', 'candlestick')
+      }
+      const recentCandlesticks = candlesticks.slice(-dataPoints)
+      const prices = recentCandlesticks.map(c => c.close)
+
+      if (prices.some(price => isNaN(price) || price < 0)) {
+        throw new DataProcessingError('Invalid price data in candlesticks', 'prices')
+      }
+      const chartConfig = this.calculateChartConfig(prices)
+      const result = this.createChartGrid(chartConfig)
+      this.drawAxisAndLabels(result, chartConfig)
+      this.plotPriceLine(result, prices, chartConfig)
+      return this.convertToString(result, chartConfig)
+    } catch (error) {
+      if (error instanceof ChartRenderingError || error instanceof DataProcessingError) {
+        throw error
+      }
+      throw new ChartRenderingError(`Failed to generate chart: ${error}`, 'candlestick')
     }
-    const recentCandlesticks = candlesticks.slice(-dataPoints)
-    const prices = recentCandlesticks.map(c => c.close)
-    const chartConfig = this.calculateChartConfig(prices)
-    const result = this.createChartGrid(chartConfig)
-    this.drawAxisAndLabels(result, chartConfig)
-    this.plotPriceLine(result, prices, chartConfig)
-    return this.convertToString(result, chartConfig)
   }
 
   /**
@@ -85,7 +104,6 @@ export class ChartRenderer {
   private drawAxisAndLabels(result: string[][], config: ReturnType<typeof this.calculateChartConfig>): void {
     const padding = '        '
     const symbols = ['┼', '┤', '╶', '╴', '─', '└', '┌', '┐', '┘', '│']
-
     for (let y = config.min2; y <= config.max2; ++y) {
       const label = (config.rows > 0 ? config.maxPrice - ((y - config.min2) * config.range) / config.rows : y).toFixed(0)
       const paddedLabel = `${padding}$${label}`.slice(-padding.length)
@@ -102,14 +120,11 @@ export class ChartRenderer {
    */
   private plotPriceLine(result: string[][], prices: number[], config: ReturnType<typeof this.calculateChartConfig>): void {
     const symbols = ['┼', '┤', '╶', '╴', '─', '└', '┌', '┐', '┘', '│']
-    
     let y0 = Math.round(prices[0] * config.ratio) - config.min2
     result[config.rows - y0][config.offset - 1] = symbols[0]
-
     for (let x = 0; x < prices.length - 1; x++) {
       y0 = Math.round(prices[x] * config.ratio) - config.min2
       const y1 = Math.round(prices[x + 1] * config.ratio) - config.min2
-
       if (y0 === y1) {
         result[config.rows - y0][x + config.offset] = symbols[4]
       } else {
@@ -137,7 +152,6 @@ export class ChartRenderer {
   ): void {
     result[config.rows - y1][x + config.offset] = y0 > y1 ? symbols[5] : symbols[6]
     result[config.rows - y0][x + config.offset] = y0 > y1 ? symbols[7] : symbols[8]
-
     const from = Math.min(y0, y1)
     const to = Math.max(y0, y1)
     for (let y = from + 1; y < to; y++) {
@@ -155,7 +169,6 @@ export class ChartRenderer {
     const chartLines = result.map(row => row.join(''))
     const timeAxis = `${' '.repeat(config.offset) + '─'.repeat(config.width)}→`
     const timeLabel = `${' '.repeat(config.offset)}Time`
-
     return `${chartLines.join('\n')}\n${timeAxis}\n${timeLabel}`
   }
 }
