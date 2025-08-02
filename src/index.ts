@@ -94,43 +94,32 @@ async function generateArchiveRange(startDate: Date, endDate: Date): Promise<voi
 async function generateHistoricArchives(startDate: Date, endDate: Date): Promise<void> {
   try {
     console.log(`🚀 Generating historic archives from ${startDate.toDateString()} to ${endDate.toDateString()}...`)
-    
-    // Set Git configuration
     const { execSync } = await import('child_process')
     execSync('git config user.email \'209737579+NeaByteLab@users.noreply.github.com\'', { stdio: 'inherit' })
     execSync('git config user.name \'NeaByteLab\'', { stdio: 'inherit' })
-    
-    // Validate date range - ensure end date is not current day or future
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const rangeEndDate = new Date(endDate)
     rangeEndDate.setHours(0, 0, 0, 0)
-
     if (rangeEndDate >= today) {
       console.error('❌ Cannot generate historic archives for current day or future dates.')
       console.error('   Please use an end date at least 1 day in the past.')
       process.exit(1)
     }
-
     const archives: string[] = []
     const currentDate = new Date(startDate)
     let successCount = 0
     let errorCount = 0
-
     while (currentDate <= endDate) {
       try {
         const archivePath = await archiveGenerator.generateArchive(currentDate)
         archives.push(archivePath)
         successCount++
-        
-        // Auto-commit each archive
         const dateStr = currentDate.toISOString().split('T')[0]
         const BOT_EMOJIS = ['📊', '📈', '💰', '📉', '🎯', '🚀', '📋', '📅', '🔥', '⚡', '💎', '🎪', '🎨', '🎭', '🎯', '🎲', '🎮', '🎸', '🎹', '🎺', '🎻', '🎼', '🎵', '🎶', '🎷', '🎸', '🎹', '🎺', '🎻']
         const randomEmoji = BOT_EMOJIS[Math.floor(Math.random() * BOT_EMOJIS.length)]
-        
         execSync(`git add '${archivePath}'`, { stdio: 'inherit' })
         execSync(`git commit -m 'bot(archive): add Bitcoin archive for ${dateStr} ${randomEmoji}' --date='${currentDate.toISOString()}'`, { stdio: 'inherit' })
-        
         console.log(`✓ Generated and committed: ${archivePath}`)
       } catch (error) {
         console.error(`❌ Failed to generate archive for ${currentDate.toDateString()}: ${error}`)
@@ -138,7 +127,6 @@ async function generateHistoricArchives(startDate: Date, endDate: Date): Promise
       }
       currentDate.setDate(currentDate.getDate() + 1)
     }
-
     console.log('\n🎉 Historic archive generation complete!')
     console.log(`✅ Successfully generated: ${successCount} archives`)
     if (errorCount > 0) {
@@ -212,4 +200,4 @@ switch (command) {
     /* Default behavior */
     updateReadme()
     break
-} 
+}
