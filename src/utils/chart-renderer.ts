@@ -25,7 +25,6 @@ export class ChartRenderer {
       }
       const recentCandlesticks = candlesticks.slice(-dataPoints)
       const prices = recentCandlesticks.map(c => c.close)
-
       if (prices.some(price => isNaN(price) || price < 0)) {
         throw new DataProcessingError('Invalid price data in candlesticks', 'prices')
       }

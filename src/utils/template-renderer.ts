@@ -15,7 +15,6 @@ export class TemplateRenderer {
     timestamp: string
   }): string {
     const changeEmoji = data.change.includes('-') ? '🔴 ' : '🟢 '
-
     return `| Metric | Value |
 |--------|-------|
 | Symbol | BTC/USDT |

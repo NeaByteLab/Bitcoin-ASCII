@@ -44,19 +44,16 @@ export class PriceApiService {
       if (!Array.isArray(kline) || kline.length < 6) {
         throw new DataProcessingError(PriceApiService.INVALID_KLINE_STRUCTURE_MESSAGE, PriceApiService.KLINE_FIELD)
       }
-
       const open = parseFloat(kline[1] as string)
       const high = parseFloat(kline[2] as string)
       const low = parseFloat(kline[3] as string)
       const close = parseFloat(kline[4] as string)
       const timestamp = kline[0] as number
       const volume = parseFloat(kline[5] as string)
-
       const numericValues = [open, high, low, close, timestamp, volume]
       if (numericValues.some(value => isNaN(value))) {
         throw new DataProcessingError(PriceApiService.INVALID_NUMERIC_MESSAGE, PriceApiService.KLINE_FIELD)
       }
-
       return {
         open,
         high,
@@ -82,17 +79,14 @@ export class PriceApiService {
   private async fetchKlines(params: Record<string, string | number>): Promise<Candlestick[]> {
     try {
       const response = await axios.get(`${this.baseUrl}/klines`, { params })
-      
       if (!Array.isArray(response.data)) {
         throw new BinanceApiError(PriceApiService.INVALID_RESPONSE_MESSAGE, response.status, PriceApiService.KLINES_ENDPOINT)
       }
-
       return response.data.map((kline: (string | number)[]) => this.mapKlineToCandlestick(kline))
     } catch (error) {
       if (error instanceof BinanceApiError || error instanceof DataProcessingError) {
         throw error
       }
-
       if (axios.isAxiosError(error)) {
         const statusCode = error.response?.status
         const message = error.response?.data?.msg || error.message
@@ -102,7 +96,6 @@ export class PriceApiService {
           '/klines'
         )
       }
-
       throw new BinanceApiError(`${PriceApiService.FAILED_FETCH_KLINE_MESSAGE}: ${error}`, undefined, PriceApiService.KLINES_ENDPOINT)
     }
   }
@@ -119,11 +112,9 @@ export class PriceApiService {
           symbol: PriceApiService.DEFAULT_SYMBOL
         }
       })
-
       if (!tickerResponse.data || typeof tickerResponse.data !== 'object') {
         throw new BinanceApiError(PriceApiService.INVALID_TICKER_RESPONSE_MESSAGE, tickerResponse.status, PriceApiService.TICKER_ENDPOINT)
       }
-
       const ticker = tickerResponse.data
       const klineResponse = await axios.get(`${this.baseUrl}/klines`, {
         params: {
@@ -132,18 +123,14 @@ export class PriceApiService {
           limit: PriceApiService.SINGLE_LIMIT
         }
       })
-
       if (!Array.isArray(klineResponse.data) || klineResponse.data.length === 0) {
         throw new BinanceApiError(PriceApiService.INVALID_RESPONSE_MESSAGE, klineResponse.status, PriceApiService.KLINES_ENDPOINT)
       }
-
       const latestKline = klineResponse.data[0]
       const currentPrice = parseFloat(latestKline[4] as string)
-
       if (isNaN(currentPrice)) {
         throw new DataProcessingError(PriceApiService.INVALID_PRICE_MESSAGE, PriceApiService.CURRENT_PRICE_FIELD)
       }
-
       return {
         symbol: PriceApiService.BTC_SYMBOL,
         price: currentPrice,
@@ -157,7 +144,6 @@ export class PriceApiService {
       if (error instanceof BinanceApiError || error instanceof DataProcessingError) {
         throw error
       }
-
       if (axios.isAxiosError(error)) {
         const statusCode = error.response?.status
         const message = error.response?.data?.msg || error.message
@@ -167,7 +153,6 @@ export class PriceApiService {
           PriceApiService.TICKER_ENDPOINT
         )
       }
-
       throw new BinanceApiError(`${PriceApiService.FAILED_FETCH_PRICE_MESSAGE} ${PriceApiService.FROM_BINANCE_MESSAGE}: ${error}`, undefined, PriceApiService.TICKER_ENDPOINT)
     }
   }

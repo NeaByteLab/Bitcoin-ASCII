@@ -142,7 +142,6 @@ async function generateHistoricArchives(startDate: Date, endDate: Date): Promise
 // Parse command line arguments
 const args = process.argv.slice(2)
 const command = args[0]
-
 switch (command) {
   case 'archive': {
     const dateArg = args[1]
@@ -154,12 +153,10 @@ switch (command) {
       }
       generateArchive(date)
     } else {
-      /* Today's archive */
       generateArchive()
     }
     break
   }
-    
   case 'archive-range': {
     const startDateArg = args[1]
     const endDateArg = args[2]
@@ -177,7 +174,6 @@ switch (command) {
     generateArchiveRange(startDate, endDate)
     break
   }
-    
   case 'archive-historic': {
     const startDateArg = args[1]
     const endDateArg = args[2]
@@ -195,9 +191,7 @@ switch (command) {
     generateHistoricArchives(startDate, endDate)
     break
   }
-    
   default:
-    /* Default behavior */
     updateReadme()
     break
 }
