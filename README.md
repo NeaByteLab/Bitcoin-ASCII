@@ -27,7 +27,7 @@ Real-time Bitcoin price ASCII candlestick charts with markdown support in TypeSc
 [ ░░                                       ] 5.85%
 
 • Blocks Mined: -1789 / 109
-• Estimated Adjustment: 4.88%
+• Estimated Adjustment: 4.86%
 ```
 
 ## 💰 Live Bitcoin Data
@@ -35,11 +35,11 @@ Real-time Bitcoin price ASCII candlestick charts with markdown support in TypeSc
 | Metric | Value |
 |--------|-------|
 | Symbol | BTC/USDT |
-| Price | $103,211.6 |
-| 24h Change | 🔴 -1.62% |
-| Volume | $17064.01M |
-| Market Cap | $17.06B |
-| Last Updated | 2025-11-13 12:38:59.994 UTC |
+| Price | $103,134.9 |
+| 24h Change | 🔴 -1.69% |
+| Volume | $17077.18M |
+| Market Cap | $17.08B |
+| Last Updated | 2025-11-13 12:40:01.249 UTC |
 
 ---
 
