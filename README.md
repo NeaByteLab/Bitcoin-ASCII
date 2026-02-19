@@ -35,11 +35,11 @@ Real-time Bitcoin price ASCII candlestick charts with markdown support in TypeSc
 | Metric | Value |
 |--------|-------|
 | Symbol | BTC/USDT |
-| Price | $66,887.1 |
-| 24h Change | 🟢 +1.07% |
-| Volume | $10151.12M |
+| Price | $66,887.2 |
+| 24h Change | 🟢 +1.08% |
+| Volume | $10151.49M |
 | Market Cap | $10.15B |
-| Last Updated | 2026-02-19 19:50:29.301 UTC |
+| Last Updated | 2026-02-19 19:50:36.626 UTC |
 
 ---
 
