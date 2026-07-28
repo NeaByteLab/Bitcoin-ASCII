@@ -1,0 +1,68 @@
+{
+  "name": "@neabyte/bitcoin-ascii",
+  "description": "-",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "exports": "./src/index.ts",
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "checkJs": false,
+    "exactOptionalPropertyTypes": true,
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
+    "jsxFragmentFactory": "React.Fragment",
+    "lib": ["deno.ns", "deno.worker", "dom", "dom.asynciterable"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noErrorTruncation": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true
+  },
+  "fmt": {
+    "bracePosition": "sameLine",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "proseWrap": "preserve",
+    "semiColons": false,
+    "singleBodyPosition": "nextLine",
+    "singleQuote": true,
+    "spaceAround": false,
+    "spaceSurroundingProperties": true,
+    "trailingCommas": "never",
+    "useBraces": "always",
+    "useTabs": false
+  },
+  "lint": {
+    "include": ["src/"],
+    "rules": {
+      "tags": ["fresh", "jsr", "jsx", "react", "recommended", "workspace"],
+      "exclude": ["no-console", "no-external-import", "prefer-ascii", "prefer-primordials"]
+    }
+  },
+  "lock": true,
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "check": "deno fmt src/ && deno lint src/ && deno check src/"
+  },
+  "imports": {
+    "@app/": "./src/"
+  },
+  "publish": {
+    "include": ["src/", "README.md", "LICENSE", "deno.json"]
+  }
+}
