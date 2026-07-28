@@ -1,48 +1,26 @@
 # Bitcoin-ASCII ₿
 
-Real-time Bitcoin price ASCII candlestick charts with markdown support in TypeScript.
+Generate daily Bitcoin ASCII chart archives with automatic commits
 
----
+## How It Works
 
-## 📈 Live Bitcoin Chart
+`Pipeline.run(lookbackDays)` walks back `lookbackDays` from yesterday to today.
 
-```
-  $80305      ┤                                     ┌──┐                   
-  $80140      ┤                                   ┌─┘  │                   
-  $79974      ┤                                   │    └─┐                 
-  $79809      ┤                                 ┌┐│      │┌─┐   ┌┐         
-  $79643      ┤                                 │└┘      └┘ └───┘│         
-  $79477      ┤                                 │                │         
-  $79312      ┤                                 │                │         
-  $79146      ┤                           ┌┐    │                │         
-  $78981      ┤                          ┌┘│    │                │   ┌┐┌┐┌ 
-  $78815      ┤                      ┌───┘ │    │                │┌──┘└┘└┘ 
-  $78649      ┤     ┌────────────────┘     └┐   │                ││        
-  $78484      ┤┌─┐ ┌┘                       └┐┌─┘                └┘        
-  $78318      ┼┘ └─┘                         └┘                            
-        ────────────────────────────────────────────────────────────→
-        Time
+For each day it:
 
-## ⚡ Bitcoin Difficulty Adjustment
-[ ░░░░░░░                                  ] 17.66%
+1. Fetches 30-minute candlesticks from the Binance Futures API using native `fetch`.
+2. Renders an ASCII candlestick chart and daily OHLC statistics.
+3. Writes the archive to `archive/YYYY/MM/DD.md`.
+4. Stages and commits the file, backdated to that day. Unchanged days are skipped.
 
-• Blocks Mined: -1299 / 361
-• Estimated Adjustment: 3.01%
+## Usage
+
+```ts
+import pipeline from '@neabyte/bitcoin-ascii'
+
+await pipeline.run(30) // archive the last 30 days
 ```
 
-## 💰 Live Bitcoin Data
+## License
 
-| Metric | Value |
-|--------|-------|
-| Symbol | BTC/USDT |
-| Price | $78,946.4 |
-| 24h Change | 🟢 +0.28% |
-| Volume | $16613.18M |
-| Market Cap | $16.61B |
-| Last Updated | 2026-05-04 14:16:16.433 UTC |
-
----
-
-## 📄 License
-
-MIT
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for details.
